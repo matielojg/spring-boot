@@ -20,7 +20,6 @@ public class Categoria implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
 	private String nome;
 	@JsonManagedReference //fazer do lado que voce quer que venha os objetos associados 
 	@ManyToMany(mappedBy = "categorias")
