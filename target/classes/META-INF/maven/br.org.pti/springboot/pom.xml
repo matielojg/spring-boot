@@ -10,12 +10,13 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.org.pti</groupId>
-	<artifactId>spring-boot</artifactId>
+	<artifactId>springboot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-boot</name>
 	<description>Spring Boot, Hibernate, REST, Ionic, JWT, S3, MySQL, MongoDB</description>
 	<properties>
 		<java.version>11</java.version>
+
 	</properties>
 	<dependencies>
 		<dependency>
@@ -57,9 +58,15 @@
 	<build>
 		<plugins>
 			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			
 		</plugins>
 	</build>
 
