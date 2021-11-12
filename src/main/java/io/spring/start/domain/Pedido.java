@@ -25,7 +25,7 @@ public class Pedido implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date instante;
 
@@ -33,11 +33,10 @@ public class Pedido implements Serializable {
 	 * Mapeamento bidirecional um pra um garantindo que o id do pagamento será o
 	 * mesmo id do Pedido correspondente
 	 */
-	
+
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido")
 	private Pagamento pagamento;
 
-	
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
@@ -63,6 +62,14 @@ public class Pedido implements Serializable {
 		// this.pagamento = pagamento;
 		this.cliente = cliente;
 		this.enderecoDeEntrega = enderecoDeEntrega;
+	}
+
+	public double getValorTotal() {
+		double soma = 0.0;
+		for (ItemPedido ip : itens) {
+			soma = soma + ip.getSubTotal();
+		}
+		return soma;
 	}
 
 	public Integer getId() {
@@ -130,5 +137,4 @@ public class Pedido implements Serializable {
 		return Objects.equals(id, other.id);
 	}
 
-	
 }

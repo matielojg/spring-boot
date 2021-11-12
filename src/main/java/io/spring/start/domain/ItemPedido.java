@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class ItemPedido implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@JsonIgnore
 	@EmbeddedId
 	private ItemPedidoPK id = new ItemPedidoPK();
@@ -23,11 +23,11 @@ public class ItemPedido implements Serializable {
 	public ItemPedido() {
 	}
 
-	public ItemPedido(Pedido pedido,Produto produto, Double desconto,Integer quantidade, Double preco) {
+	public ItemPedido(Pedido pedido, Produto produto, Double desconto, Integer quantidade, Double preco) {
 		super();
 		/**
-		 * Devido o id de ItemPedidoPK ser chave composta
-		 * ao invés de id, coloca-se o pedido e o produto dentro do objeto id
+		 * Devido o id de ItemPedidoPK ser chave composta ao invés de id, coloca-se o
+		 * pedido e o produto dentro do objeto id
 		 */
 		id.setPedido(pedido);
 		id.setProduto(produto);
@@ -36,16 +36,23 @@ public class ItemPedido implements Serializable {
 		this.preco = preco;
 	}
 
+	public double getSubTotal() {
+		return (preco - desconto) * quantidade;
+	}
+
 	@JsonIgnore
 	public Pedido getPedido() {
 		return id.getPedido();
 	}
-	
+
 	public Produto getProduto() {
-		return id.getProduto();  
-		/** operação direta para ter acesso direto ao pedido e
-		produto fora da classe itemPedido**/
+		return id.getProduto();
+		/**
+		 * operação direta para ter acesso direto ao pedido e produto fora da classe
+		 * itemPedido
+		 **/
 	}
+
 	public ItemPedidoPK getId() {
 		return id;
 	}
@@ -94,5 +101,5 @@ public class ItemPedido implements Serializable {
 		ItemPedido other = (ItemPedido) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 }
