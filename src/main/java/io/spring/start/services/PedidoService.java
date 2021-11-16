@@ -33,13 +33,13 @@ public class PedidoService {
 
 	@Autowired
 	private ProdutoService produtoService;
-	
+
 	@Autowired
 	private ClienteService clienteService;
 
 	@Autowired
 	private EmailService emailService;
-	
+
 	public Pedido find(Integer id) {
 		Optional<Pedido> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
@@ -66,9 +66,9 @@ public class PedidoService {
 			ip.setPedido(obj);
 		}
 		itemPedidoRepository.saveAll(obj.getItens());
-		//System.out.println(obj);
-		emailService.sendOrderConfirmationEmail(obj);
-		//Em TestConfig, criar um método @Bean EmailService que retorna uma instância de MockEmailService
+		emailService.sendOrderConfirmationHtmlEmail(obj);
+		// Em TestConfig, criar um método @Bean EmailService que retorna uma instância
+		// de MockEmailService
 		return obj;
 	}
 }
