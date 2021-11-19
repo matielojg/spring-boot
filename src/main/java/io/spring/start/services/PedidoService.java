@@ -72,7 +72,7 @@ public class PedidoService {
 			ip.setPedido(obj);
 		}
 		itemPedidoRepository.saveAll(obj.getItens());
-		emailService.sendOrderConfirmationHtmlEmail(obj);
+		emailService.sendOrderConfirmationEmail(obj);
 		// Em TestConfig, criar um método @Bean EmailService que retorna uma instância
 		// de MockEmailService
 		return obj;
