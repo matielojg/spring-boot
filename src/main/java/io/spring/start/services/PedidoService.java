@@ -4,9 +4,13 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.spring.start.domain.Cliente;
 import io.spring.start.domain.ItemPedido;
 import io.spring.start.domain.PagamentoComBoleto;
 import io.spring.start.domain.Pedido;
@@ -14,6 +18,8 @@ import io.spring.start.domain.enums.EstadoPagamento;
 import io.spring.start.repositories.ItemPedidoRepository;
 import io.spring.start.repositories.PagamentoRepository;
 import io.spring.start.repositories.PedidoRepository;
+import io.spring.start.security.UserSS;
+import io.spring.start.services.exceptions.AuthorizationException;
 import io.spring.start.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -70,5 +76,15 @@ public class PedidoService {
 		// Em TestConfig, criar um método @Bean EmailService que retorna uma instância
 		// de MockEmailService
 		return obj;
+	}
+
+	public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("Usuário não autenticado!");
+		}
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Cliente cliente = clienteService.find(user.getId());
+		return repo.findByCliente(cliente, pageRequest);
 	}
 }
