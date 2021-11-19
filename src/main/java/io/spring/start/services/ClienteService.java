@@ -16,11 +16,14 @@ import org.springframework.stereotype.Service;
 import io.spring.start.domain.Cidade;
 import io.spring.start.domain.Cliente;
 import io.spring.start.domain.Endereco;
+import io.spring.start.domain.enums.Perfil;
 import io.spring.start.domain.enums.TipoCliente;
 import io.spring.start.dto.ClienteDTO;
 import io.spring.start.dto.ClienteNewDTO;
 import io.spring.start.repositories.ClienteRepository;
 import io.spring.start.repositories.EnderecoRepository;
+import io.spring.start.security.UserSS;
+import io.spring.start.services.exceptions.AuthorizationException;
 import io.spring.start.services.exceptions.DataIntegrityException;
 import io.spring.start.services.exceptions.ObjectNotFoundException;
 
@@ -40,6 +43,11 @@ public class ClienteService {
 	// ocorre uma injeção de dependência
 
 	public Cliente find(Integer id) {
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
