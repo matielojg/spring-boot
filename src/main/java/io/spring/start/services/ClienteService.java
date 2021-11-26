@@ -1,5 +1,6 @@
 package io.spring.start.services;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.spring.start.domain.Cidade;
 import io.spring.start.domain.Cliente;
@@ -39,6 +41,9 @@ public class ClienteService {
 	@Autowired
 	private BCryptPasswordEncoder pe;
 
+	@Autowired
+	private S3Service s3Service;
+
 	// não precisa intanciar , pois o Spring o faz com o @Autowired
 	// ocorre uma injeção de dependência
 
@@ -47,7 +52,7 @@ public class ClienteService {
 		if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
 			throw new AuthorizationException("Acesso negado");
 		}
-		
+
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
@@ -110,4 +115,7 @@ public class ClienteService {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
 	}
+	public URI uploadProfilePicture(MultipartFile multipartFile) {
+		return s3Service.uploadFile(multipartFile);
+	} 
 }
